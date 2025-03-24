@@ -50,6 +50,10 @@ class MyAccessBDD extends AccessBDD {
                 return $this->selectAllCommandesDocument($champs);
             case "" :
                 // return $this->uneFonction(parametres);
+            case "rappel" :
+                return $this->selectAllRappel();
+            case "utilisateur" :
+                return $this->selectAllUtilisateur($champs);
             default:
                 // cas général
                 return $this->selectTuplesOneTable($table, $champs);
@@ -299,6 +303,38 @@ class MyAccessBDD extends AccessBDD {
         $requete .= "ORDER BY dateCommande DESC";
         return $this->conn->queryBDD($requete, $champNecessaire);
     }
+    /**
+     * Récupère tous les abonnemnts de revues qui expirent dans moins de 30 jours
+     * @return array|null
+     */
+    private function selectAllRappel(): ?array
+    {
+        $requete = "SELECT d.titre, a.dateFinAbonnement ";
+        $requete .= "FROM abonnement a JOIN revue r ON a.idRevue = r.id JOIN document d ON r.id = d.id ";      
+        $requete .= "WHERE DATEDIFF(CURRENT_DATE(), a.dateFinAbonnement) < 30 ";
+        $requete .= "ORDER BY a.dateFinAbonnement ASC ";
+        return $this->conn->queryBDD($requete);
+    }
+
+    /**
+     * Récupère l'utilisateur d'un identifiant
+     * @param array|null $champs 
+     * @return array|null
+     */
+    private function selectAllUtilisateur(?array $champs): ?array
+    {
+        if (empty($champs)) {
+            return null;
+        }
+        if (!array_key_exists('login', $champs)) {
+            return null;
+        }
+        $champNecessaire['login'] = $champs['login'];
+        $requete = "SELECT u.login, u.password, u.idService ";
+        $requete .= "FROM utilisateur u ";      
+        $requete .= "WHERE u.login = :login ";
+        return $this->conn->queryBDD($requete, $champNecessaire);
+    }
 }
 
 
@@ -306,4 +342,3 @@ class MyAccessBDD extends AccessBDD {
 
 
 
-//test
