@@ -300,3 +300,10 @@ class MyAccessBDD extends AccessBDD {
         return $this->conn->queryBDD($requete, $champNecessaire);
     }
 }
+
+
+
+
+
+
+//test
