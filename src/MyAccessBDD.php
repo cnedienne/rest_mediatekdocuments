@@ -38,6 +38,8 @@ class MyAccessBDD extends AccessBDD {
                 return $this->selectAllDvd();
             case "revue" :
                 return $this->selectAllRevues();
+            case "abonnement":
+                return $this->selectAllAbonnement($champs);
             case "exemplaire" :
                 return $this->selectExemplairesRevue($champs);
             case "genre" :
@@ -303,6 +305,28 @@ class MyAccessBDD extends AccessBDD {
         $requete .= "ORDER BY dateCommande DESC";
         return $this->conn->queryBDD($requete, $champNecessaire);
     }
+
+    /**
+     * Récupère tous les abonnements d'une revue
+     * @param array|null $champs 
+     * @return array|null
+     */
+    private function selectAllAbonnement(?array $champs): ?array
+    {
+        if (empty($champs)) {
+            return null;
+        }
+        if (!array_key_exists('id', $champs)) {
+            return null;
+        }
+        $champNecessaire['id'] = $champs['id'];
+        $requete = "SELECT a.id ,a.dateFinAbonnement, a.idRevue, c.dateCommande, c.montant ";
+        $requete .= "FROM abonnement a JOIN commande c ON a.id = c.id ";      
+        $requete .= "WHERE a.idRevue = :id ";
+        $requete .= "ORDER BY dateCommande DESC ";
+        return $this->conn->queryBDD($requete, $champNecessaire);
+    }
+
     /**
      * Récupère tous les abonnemnts de revues qui expirent dans moins de 30 jours
      * @return array|null
