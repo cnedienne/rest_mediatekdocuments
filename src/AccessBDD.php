@@ -15,7 +15,7 @@ abstract class AccessBDD {
     protected $conn = null;	
 
     /**
-     * constructeur : récupère les variables d'environnement 
+     * constructeur : récupère les variables d'environnement
      * et récupère l'instance de connexion à la BDD
      */
     protected function __construct(){
@@ -59,9 +59,37 @@ abstract class AccessBDD {
         }       
     }
 
+    /**
+     * Méthode abstraite pour traiter une requête SELECT.
+     * @param string $table La table concernée.
+     * @param array|null $champs Les champs à sélectionner.
+     * @return array|null Les résultats de la requête ou null en cas d'erreur.
+     */
     abstract protected function traitementSelect(string $table, ?array $champs) : ?array;
+
+    /**
+     * Méthode abstraite pour traiter une requête INSERT.
+     * @param string $table La table concernée.
+     * @param array|null $champs Les champs et valeurs à insérer.
+     * @return int|null Le nombre de lignes insérées ou null en cas d'erreur.
+     */
     abstract protected function traitementInsert(string $table, ?array $champs) : ?int;
+
+    /**
+     * Méthode abstraite pour traiter une requête UPDATE.
+     * @param string $table La table concernée.
+     * @param string|null $id L'identifiant de l'enregistrement à mettre à jour.
+     * @param array|null $champs Les champs et valeurs à mettre à jour.
+     * @return int|null Le nombre de lignes mises à jour ou null en cas d'erreur.
+     */
     abstract protected function traitementUpdate(string $table, ?string $id, ?array $champs) : ?int;
+
+    /**
+     * Méthode abstraite pour traiter une requête DELETE.
+     * @param string $table La table concernée.
+     * @param array|null $champs Les conditions pour la suppression.
+     * @return int|null Le nombre de lignes supprimées ou null en cas d'erreur.
+     */
     abstract protected function traitementDelete(string $table, ?array $champs) : ?int;
 
 }
